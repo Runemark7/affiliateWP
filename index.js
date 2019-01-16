@@ -5,16 +5,16 @@ const static = require('koa-static');
 const send = require('koa-send');
 const path = require("path");
 const parser = require('koa-bodyparser');
-//separata routes
-const login_system_routes = require('./app/routes/login_sys_routes');
-
-//moduler
-
-
+const session = require('koa-session');
+const mongoose = require('mongoose');
 const app = new Koa();
 const router = new Router();
 
-//routes 
+//modules
+
+
+//routes
+const login_system_routes = require('./app/routes/login_sys_routes');
 router.use('/konto', login_system_routes.routes());
 
 //standard 
@@ -22,10 +22,12 @@ app.use(parser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+mongoose.connect('mongodb://localhost:27017/affiliateWP');
+
 router.get('/', async function(ctx){
 
   await send(ctx, 'public/index.html');
   
 });
 
-app.listen(3000);
+app.listen(3000, console.log("3000"));
