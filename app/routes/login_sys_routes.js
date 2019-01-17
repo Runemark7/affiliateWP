@@ -14,13 +14,19 @@ router.get('/login', async function(ctx){
   await send(ctx, 'app/views/login_system/login.html');
   }); 
 
+router.post('/login', async function(ctx){
+  if(login_user(ctx.request.body)){
+    ctx.res.send("Du är inloggad");
+  };  
+});
+
 router.get('/register', async function(ctx){
     await send(ctx, 'app/views/login_system/register.html');
   });
 
 router.post('/register', async function(ctx){
   if(create_user(ctx.request.body)){
-    Response.send('Användare registrerad');
+    ctx.res.send('Användare registrerad');
   }
 
 });

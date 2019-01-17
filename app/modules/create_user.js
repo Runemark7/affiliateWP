@@ -1,12 +1,14 @@
 const bcrypt = require('bcryptjs');
-const database = require('./../class/Db');
+const userScheme = require('../schemas/create_user_schema');
+const mongoose = require('mongoose');
 
 module.exports = function(send_user){
     let user = {}
     user.email = send_user.email;
     user.id = Date.now();
     user.first = send_user.first;
-    user.second = send_user.second;
+    user.last = send_user.second;
+    user.country = send_user.country;
     
     let password = send_user.password;
     let tempPassword = password;
@@ -18,20 +20,30 @@ module.exports = function(send_user){
         bcrypt.hash(tempPassword, salt, function(err,hash){
             if(err)throw err;
             console.log(hash);
-
-            user.password = hash;
-            saveUser(user,password);
+            user.salt = salt;
+            user.hash = hash;
+            saveUser(user);
         });
     });
 }
 
-function saveUser(userObj, user_pwd){
+function saveUser(userObj){
 
-    var personSchema = mongoose.Schema({
-        name: "ola",
-        age: 7,
-        nationality: "sweden"
-    });
+    var newUser = new userScheme;
     
-    var Person = mongoose.model("accounts", personSchema);
+    newUser.username = userObj.email;
+    newUser.email = userObj.email;
+    newUser.info.name.first_name = userObj.first;
+    newUser.info.name.last_name = userObj.last;
+    newUser.info.country = userObj.country; 
+    newUser.hash = userObj.hash;
+    newUser.salt = userObj.salt;
+    
+    newUser.save(function(err, res){
+        if(err) throw err;
+        else{
+            console.log(res);
+        }
+    });
+
 }

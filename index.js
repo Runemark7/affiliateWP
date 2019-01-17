@@ -12,7 +12,7 @@ const router = new Router();
 
 //modules
 
-
+mongoose.connect('mongodb://localhost:27017/affWP', {useNewUrlParser: true});
 //routes
 const login_system_routes = require('./app/routes/login_sys_routes');
 router.use('/konto', login_system_routes.routes());
@@ -21,8 +21,6 @@ router.use('/konto', login_system_routes.routes());
 app.use(parser());
 app.use(router.routes());
 app.use(router.allowedMethods());
-
-mongoose.connect('mongodb://localhost:27017/affiliateWP');
 
 router.get('/', async function(ctx){
 
