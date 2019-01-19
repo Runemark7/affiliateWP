@@ -5,7 +5,6 @@ const static = require('koa-static');
 const send = require('koa-send');
 const path = require("path");
 const parser = require('koa-bodyparser');
-const session = require('koa-session');
 const mongoose = require('mongoose');
 const app = new Koa();
 const router = new Router();

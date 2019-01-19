@@ -6,4 +6,4 @@ var loginSchema = new Schema({
     password : { type: String, required: true }
 })
 
-module.exports = mongoose.model("User", loginSchema);
+module.exports = mongoose.model("users", loginSchema);
