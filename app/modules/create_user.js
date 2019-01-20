@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const userScheme = require('../schemas/create_user_schema');
-const mongoose = require('mongoose');
 
 module.exports = function(send_user){
     let user = {}
@@ -12,6 +11,8 @@ module.exports = function(send_user){
     
     let password = send_user.password;
     let tempPassword = password;
+
+    validate_email(user.email);
 
     bcrypt.genSalt(12,function(err,salt){
         if(err)throw err;
@@ -25,6 +26,11 @@ module.exports = function(send_user){
             saveUser(user);
         });
     });
+}
+
+function validate_email(email) {
+    var re =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return re.test(String(email).toLowerCase());
 }
 
 function saveUser(userObj){

@@ -6,12 +6,12 @@ var UserSchema = new Schema({
   email: {min:6, max:40, type: String, required: true, index: { unique : true }},
   info:{
     name:{
-      first_name: {type: String, required: true, index: { unique : true }},
-      last_name: {type: String, required: true, index: { unique : true }}
+      first_name: {type: String, required: true},
+      last_name: {type: String, required: true}
     },
-    country: String,
+    country: {type: String, required: true}
   },
-  hash: String
+  hash: {type: String, required: true}
 }, {timestamps: true});
 
 module.exports = mongoose.model("User", UserSchema);

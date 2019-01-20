@@ -1,11 +1,10 @@
 const bcrypt = require('bcryptjs');
 const loginUser = require('./../schemas/login_user_shema');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 
 module.exports = async function(send_user){
     return new Promise(function(resolve, reject){
-        loginUser.findOne({ username : send_user.username}, function(err,result){
+        loginUser.findOne({ username : send_user.username }, function(err,result){
             if(err){
                 reject(err);
             }
@@ -15,8 +14,8 @@ module.exports = async function(send_user){
                 var sentPassword = send_user.password;
                 bcrypt.compare(sentPassword, dbPassword, function(err, result){
                     if(result)
-                    {
-                        resolve(true);
+                    {   
+                        resolve(objResult);
                     }
                     else{
                         reject(false);
