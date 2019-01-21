@@ -1,9 +1,9 @@
+module.exports = async function(ctx,next){
+    if(ctx.session.id != null){
+        await next();
+    }
+    else{
+        ctx.body = "FAILURE";
+    }
 
-
-module.exports = async function(send_user){
-/* kolla om användaren finns i databasen kolla med _id  
-    detta ska bara behövas kollas när man gör en post request
-    annars ska inte denna kallas 
-*/
-    
 }

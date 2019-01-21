@@ -10,6 +10,7 @@ const render = require('koa-ejs');
 const path = require("path");
 const app = new Koa();
 const router = new Router();
+const auth = require("./app/middleware/check_session");
 
 const CONFIG = {
   key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
@@ -25,16 +26,16 @@ const CONFIG = {
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
 
-// ejs sesttings 
+// ejs settings 
 render(app,{
   root: path.join(__dirname, 'app', 'views'),
   layout: 'template',
   viewExt: 'html',
   cache: false,
-  debug: true
+  debug: false
 });
 
-app.keys = ['mysecret'];
+app.keys = [process.env.test];
 
 app.use(session(CONFIG,app));  // Include the session middleware
 
@@ -50,12 +51,9 @@ app.use(parser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-router.get('/',async function(ctx){  
-  const users = [{ name: 'Dead Horse' }, { name: 'Jack' }, { name: 'Tom' }];
-  await ctx.render('template', {
-    users
-  });
-
+router.get('/', async function(ctx){
+  var id = ctx.session.id;
+  await ctx.render('template',{"userid" :id });
 });
 
 app.listen(3000, console.log("3000"));
