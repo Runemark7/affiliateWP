@@ -1,0 +1,18 @@
+body{
+    width:100%;
+}
+
+#wrapper{
+    width:100%;
+    height: auto;
+}
+
+#navbar{
+    width:20%;
+    display:flex;
+    background-color:red;
+}
+#content-wrapper{
+    width:80%;
+    background-color: blue;
+}

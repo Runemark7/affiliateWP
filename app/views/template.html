@@ -1,19 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- css -->
-    <link rel="stylesheet" href="../../public/css/standard.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!-- css -->
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
+
     <title>Document</title>
 </head>
 <body>
-    <% if(userid != null){ %>
-        <h1>you are logged in</h1>
-    <% } else{ %>  
-        <% include login_system/login.html %>
-    <% } %>
+    <div id="wrapper">
+            <ul id="navbar">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span>Startsida</span>
+                    </a>
+                </li>
+            <% if(userid == null){ %>
+                <li class="nav-item">
+                    <a href="konto/login" class="nav-link">
+                        <span>Logga in</span>
+                    </a>
+                    <a href="#" class="nav-link second-link">
+                        <span>Glömt lösenord?</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="konto/register" class="nav-link">
+                        <span>Registrera</span>
+                    </a>
+                </li>
+            <% } else{ %>
+                <li class="nav-item">
+                    <a href="konto/logout" class="nav-link">
+                        <span>Logout</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span>statistik</span>
+                    </a>
+                </li>
+            </ul>
+        <% } %>
+
+        <div id="content-wrapper">
+                <h1>contet-wrapper</h1>
+        </div>
+            
+
+
+
+    </div>
 </body>
 </html>

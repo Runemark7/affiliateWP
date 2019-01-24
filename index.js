@@ -1,13 +1,13 @@
 //instrallerade paket !(koa-ejs)
 const Koa = require('koa');
 const Router = require('koa-router');
-const static = require('koa-static');
 const send = require('koa-send');
 const session = require("koa-session");
 const parser = require('koa-bodyparser');
 const mongoose = require('mongoose');
+const static = require('koa-static');
 const render = require('koa-ejs');
-const path = require("path");
+const path = require('path');
 const app = new Koa();
 const router = new Router();
 const auth = require("./app/middleware/check_session");
@@ -38,6 +38,8 @@ render(app,{
 app.keys = [process.env.test];
 
 app.use(session(CONFIG,app));  // Include the session middleware
+app.use(static('public'));
+
 
 //modules
 mongoose.connect('mongodb://localhost:27017/affWP', {useNewUrlParser: true});
@@ -50,6 +52,7 @@ router.use('/konto', login_system_routes.routes());
 app.use(parser());
 app.use(router.routes());
 app.use(router.allowedMethods());
+
 
 router.get('/', async function(ctx){
   var id = ctx.session.id;

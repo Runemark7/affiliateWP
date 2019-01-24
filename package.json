@@ -27,5 +27,6 @@
     "koa-session": "^5.10.1",
     "koa-static": "^5.0.0",
     "mongoose": "^5.4.4"
-  }
+  },
+  "devDependencies": {}
 }
