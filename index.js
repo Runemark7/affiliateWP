@@ -1,7 +1,6 @@
 //instrallerade paket !(koa-ejs)
 const Koa = require('koa');
 const Router = require('koa-router');
-const send = require('koa-send');
 const session = require("koa-session");
 const parser = require('koa-bodyparser');
 const mongoose = require('mongoose');
@@ -54,7 +53,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 
-router.get('/', async function(ctx){
+router.get('/',async function(ctx){
   var id = ctx.session.id;
   await ctx.render('template',{"userid" :id });
 });

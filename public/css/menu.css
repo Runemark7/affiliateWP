@@ -1,18 +1,84 @@
-body{
-    width:100%;
-}
-
+/* GENERAL GENERAL GENERAL GENERAL GENERAL GENERAL */
 #wrapper{
     width:100%;
     height: auto;
+    display:flex;
+}
+/* TOPBAR TOPBAR TOPBAR TOPBAR TOPBAR TOPBAR TOPBAR */
+#topbar-wrapper{
+    width:100%;
+    background-color:blue;
+    height:Auto;
+    overflow:hidden;
 }
 
-#navbar{
-    width:20%;
+#topbar{
+    height:5vh;
+    width:100%;
+    background-color:pink;
     display:flex;
-    background-color:red;
+    justify-content: space-between;
 }
+
+#topbar-account{
+    width:10%;
+    height:Auto;
+}
+
+#topbar-title{
+    position: relative;
+    display: inline-block;
+    width:20%;
+    text-align: center;
+}
+
+#dropdown-item-wrapper{
+    display:none;  
+    position: absolute;
+    height:auto;
+    background-color: #f1f1f1;
+    width: 60%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+#topbar-account:hover #dropdown-item-wrapper{
+    display:block;
+}
+.dropdown-item{
+    padding:2.5vh;
+}
+.dropdown-link{
+    text-decoration: none;
+}
+.dropdown-link span{
+    color:black;
+}
+
+/* MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU */
+#menu-wrapper{
+    width:15%;
+}
+#navbar{
+    width:100%;
+    background-color:#1B2A47;
+    padding:10px;
+    list-style:none;
+    height:100vh;
+}
+.nav-item{
+    text-align: center;
+    padding:6%;
+}
+.nav-link{
+    text-decoration: none;
+    color:black;
+}
+.nav-link span{
+    font-size:1.3em;
+}
+
+/* CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT */
 #content-wrapper{
-    width:80%;
-    background-color: blue;
+    width:100%;
 }

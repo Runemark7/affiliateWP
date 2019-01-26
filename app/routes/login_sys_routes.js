@@ -10,7 +10,7 @@ const create_user = require('./../modules/create_user');
 const login_user = require('./../modules/login_user');
 
 
-router.get('/',auth,async function(ctx){
+router.get('/',async function(ctx){
   await send(ctx, 'app/views/login_system/konto.html');
 
   });
