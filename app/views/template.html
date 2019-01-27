@@ -12,64 +12,64 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="topbar-wrapper">
-        <div id="topbar">
-            <div id="topbar-title">Worryless</div>
-            <div id="topbar-account">
-                <div id="topbar-account-title">Konto</div>
-                <div id="dropdown-item-wrapper">
-                    <% if(userid != null){ %>
-                    <div class="dropdown-item">
-                        <a href="konto" class="dropdown-link">
-                            <span>Mitt konto</span>
-                        </a>
-                    </div>
-                    <div class="dropdown-item">
-                        <a href="konto/settings" class="dropdown-link">
-                            <span>Inställningar</span>
-                        </a>
-                    </div>
-                    <div class="dropdown-item">
-                        <a href="konto/logout" class="dropdown-link">
-                            <span>Logout</span>
-                        </a>
-                    </div>
-                    <% }else{ %>
-                    <div class="dropdown-item">
-                        <a href="konto/login" class="dropdown-link">
-                            <span>Logga in</span>
-                        </a>
-                    </div>
-                    <div class="dropdown-item">
-                        <a href="konto/register" class="dropdown-link">
-                            <span>Registrera</span>
-                        </a>
-                    </div>
-                    <% } %>
+<div id="topbar-wrapper">
+    <div id="topbar">
+        <div id="topbar-title">Worryless</div>
+        <div id="topbar-account">
+            <div id="topbar-account-title">Konto</div>
+            <div id="dropdown-item-wrapper">
+                <% if(userid != null){ %>
+                <div class="dropdown-item">
+                    <a href="konto" class="dropdown-link">
+                        <span>Mitt konto</span>
+                    </a>
                 </div>
+                <div class="dropdown-item">
+                    <a href="konto/settings" class="dropdown-link">
+                        <span>Inställningar</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="konto/logout" class="dropdown-link">
+                        <span>Logout</span>
+                    </a>
+                </div>
+                <% }else{ %>
+                <div class="dropdown-item">
+                    <a href="konto/login" class="dropdown-link">
+                        <span>Logga in</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="konto/register" class="dropdown-link">
+                        <span>Registrera</span>
+                    </a>
+                </div>
+                <% } %>
             </div>
         </div>
     </div>
+</div>
     
-    <div id="wrapper">
-        <div id="menu-wrapper">
-            <ul id="navbar">
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span>Startsida</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span>statistik</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    
-        <div id="content-wrapper">
-                <h1>contet-wrapper</h1>
-        </div>
+<div id="wrapper">
+    <div id="menu-wrapper">
+        <ul id="navbar">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span>Startsida</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span>statistik</span>
+                </a>
+            </li>
+        </ul>
     </div>
+
+    <div id="content-wrapper">
+            <h1>contet-wrapper</h1>
+    </div>
+</div>
 </body>
 </html>

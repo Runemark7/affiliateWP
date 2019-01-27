@@ -70,9 +70,14 @@
     text-align: center;
     padding:6%;
 }
+.nav-item:hover{
+    background-color:blue;
+    font-size:27px;
+    cursor:pointer;
+}
 .nav-link{
     text-decoration: none;
-    color:black;
+    color:white;
 }
 .nav-link span{
     font-size:1.3em;

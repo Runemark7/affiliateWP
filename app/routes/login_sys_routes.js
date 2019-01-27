@@ -3,14 +3,21 @@ const Router = require('koa-router');
 const send = require('koa-send');
 const session = require('koa-session');
 const auth = require("./../middleware/check_session");
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const router = new Router();
+
 
 //modules 
 const create_user = require('./../modules/create_user');
 const login_user = require('./../modules/login_user');
+const add_coupon = require('./../modules/add_coupon');
+
+//schemas
+const insert_coupon = require('./../schemas/add_coupon_schema');
 
 
-router.get('/',async function(ctx){
+router.get('/',auth,async function(ctx){
   await send(ctx, 'app/views/login_system/konto.html');
 
   });
@@ -48,5 +55,19 @@ router.get('/logout', async function(ctx){
   ctx.body = "Du är utloggad";
 });
 
+router.get('/rabattkod', async function(ctx){
+  await send(ctx, 'app/views/includes/insert_coupon.html');
+});
 
+router.post('/rabattkod', async function(ctx){
+  var user_id = ctx.session.id;
+  if(add_coupon(user_id))
+  {
+    ctx.body = "coupon added";
+  }
+  else
+  {
+    ctx.body = "coupon failed, test again";
+  }
+});
  module.exports = router
