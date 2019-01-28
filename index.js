@@ -3,15 +3,17 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const session = require("koa-session");
 const parser = require('koa-bodyparser');
-const mongoose = require('mongoose');
 const static = require('koa-static');
 const render = require('koa-ejs');
+const send = require('koa-send');
 const path = require('path');
 const mysql = require('mysql');
 const app = new Koa();
 const router = new Router();
 const auth = require("./app/middleware/check_session");
 
+
+////////////////////////////////////////CONFIGS/////////////////////////////////////////
 const CONFIG = {
   key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
   /** (number || 'session') maxAge in ms (default is 1 days) */
@@ -43,9 +45,7 @@ app.use(static('public'));
 
 //modules
 require('./app/modules/db.js')(app);
-//routes
-const login_system_routes = require('./app/routes/login_sys_routes');
-router.use('/konto', login_system_routes.routes());
+
 //standard 
 app.use(parser());
 app.use(router.routes());
@@ -57,11 +57,77 @@ router.get('/',async function(ctx){
   await ctx.render('template',{"userid" :id });
 });
 
+//#########################################################################
+//############################LOGIN ROUTES#################################
+//#########################################################################
+
+const create_user = require('./app/modules/create_user');
+const login_user = require('./app/modules/login_user');
+const add_coupon = require('./app/modules/add_coupon');
+
+router.get('/konto',auth,async function(ctx){
+  await send(ctx, 'app/views/login_system/konto.html');
+  });
+
+router.get('/konto/login',async function(ctx){
+  await send(ctx, 'app/views/login_system/login.html');
+  }); 
+
+router.post('/konto/login', async function(ctx){
+ let loginCheck = await login_user(ctx.request.body);
+  if(loginCheck)
+  {
+    ctx.session.id = loginCheck._id;
+    console.log("you are logged in from route");
+  }
+  else{
+    console.log("you failed from route");
+  }
+});
+
+router.get('/konto/register', async function(ctx){
+    await send(ctx, 'app/views/login_system/register.html');
+  });
+
+router.post('/konto/register', async function(ctx){
+  if(create_user(ctx.request.body)){
+    ctx.body = "användare skapad";
+  }
+  else{
+    ctx.body = "Fel";
+  }
+});
+
+router.get('/konto/logout', async function(ctx){
+  ctx.session = null;
+  console.log(ctx.session);
+  ctx.body = "Du är utloggad";
+});
+
+router.get('/konto/rabattkod', async function(ctx){
+  await send(ctx, 'app/views/includes/insert_coupon.html');
+});
+
+router.post('/konto/rabattkod', async function(ctx){
+  console.log(ctx.session.username);
+  var user_id = ctx.session.id;
+  if(add_coupon(user_id,app))
+  {
+    ctx.body = "coupon added";
+  }
+  else
+  {
+    ctx.body = "coupon failed, test again";
+  }
+});
+
+
+
+
 /* 
 
 NÄR MAN SKAPAR EN KOD SKA DEN LÄGGAS I USERNS "info" COLUMN SÅ ATT MAN SEDAN KAN GÖRA EN QUERY PÅ JUST DEN ANVÄNDARENS ID OCH HÄMTA DEN NÄR
 MAN SKA SPEGLA STATISIKEN PÅ STARTSIDAB
-
 
 infon om koden 
 SELECT * FROM wordpress.wp58_woocommerce_order_itemmeta where order_item_id=31;
@@ -78,13 +144,13 @@ sedan tar man order_item_id och gör en query till SELECT * FROM wordpress.wp58_
 
 var con = mysql.createConnection({
   host: "178.128.194.96",
-  user: "runeschool",
-  password: 'olaheterintepeter'
+  user: "runehemma",
+  password: 'lennartgillar'
 });
 
 con.connect(function(err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("mysql Connected!");
   get_the_id();
 });
 
