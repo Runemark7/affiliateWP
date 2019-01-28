@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const loginUser = require('./../schemas/login_user_shema');
-const mongoose = require('mongoose');
 
 module.exports = async function(send_user){
     return new Promise(function(resolve, reject){

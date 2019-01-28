@@ -6,16 +6,12 @@ const auth = require("./../middleware/check_session");
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const router = new Router();
-
-
+const app = new Koa();
+require('./../modules/db')(app);
 //modules 
 const create_user = require('./../modules/create_user');
 const login_user = require('./../modules/login_user');
 const add_coupon = require('./../modules/add_coupon');
-
-//schemas
-const insert_coupon = require('./../schemas/add_coupon_schema');
-
 
 router.get('/',auth,async function(ctx){
   await send(ctx, 'app/views/login_system/konto.html');
@@ -61,7 +57,7 @@ router.get('/rabattkod', async function(ctx){
 
 router.post('/rabattkod', async function(ctx){
   var user_id = ctx.session.id;
-  if(add_coupon(user_id))
+  if(add_coupon(user_id,app))
   {
     ctx.body = "coupon added";
   }

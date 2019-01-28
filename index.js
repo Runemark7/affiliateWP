@@ -42,12 +42,10 @@ app.use(static('public'));
 
 
 //modules
-mongoose.connect('mongodb://localhost:27017/affWP', {useNewUrlParser: true});
-
+require('./app/modules/db.js')(app);
 //routes
 const login_system_routes = require('./app/routes/login_sys_routes');
 router.use('/konto', login_system_routes.routes());
-
 //standard 
 app.use(parser());
 app.use(router.routes());
@@ -80,8 +78,8 @@ sedan tar man order_item_id och gör en query till SELECT * FROM wordpress.wp58_
 
 var con = mysql.createConnection({
   host: "178.128.194.96",
-  user: "runehemma",
-  password: "lennartgillar"
+  user: "runeschool",
+  password: 'olaheterintepeter'
 });
 
 con.connect(function(err) {
@@ -110,7 +108,6 @@ function get_the_count(id){
   if(err)throw err;
   var result_info = JSON.parse(JSON.stringify(result));
   result_info.forEach(element => {
-    console.log(element);
   });
 });
 }
