@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
-
-module.exports = function(user_id,app){
-
-    app.users.findOne({_id : user_id}, function(err, result){
-        if(err)throw err;
-        console.log(result);
+module.exports = function(uname,app,coupon_name){
+    return new Promise(function(resolve, reject){
+        app.users.findOne({username : uname}, function(err, result){
+            if(err){reject(false); throw err;}
+            app.users.updateOne({username : uname}, {$set:{coupon : coupon_name}}, function(err,result){
+                if(err){reject(false); throw err;}
+                console.log("coupon added to " + uname);
+                resolve(true);
+            });
+        });
     });
-
-
 }
 

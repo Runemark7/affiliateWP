@@ -4,5 +4,5 @@ module.exports = function(app){
         if(err)throw err;
         console.log("mongoose Connected!");
         app.users = con.db.collection("users");
-  });
+    });
 }
