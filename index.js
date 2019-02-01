@@ -5,13 +5,10 @@ const session = require("koa-session");
 const parser = require('koa-bodyparser');
 const static = require('koa-static');
 const render = require('koa-ejs');
-const send = require('koa-send');
 const path = require('path');
-const mysql = require('mysql');
 const app = new Koa();
 const router = new Router();
 const auth = require("./app/middleware/check_session");
-
 
 ////////////////////////////////////////CONFIGS/////////////////////////////////////////
 const CONFIG = {
@@ -28,7 +25,6 @@ const CONFIG = {
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
 
-// ejs settings 
 render(app,{
   root: path.join(__dirname, 'app', 'views'),
   layout: false,
@@ -52,10 +48,14 @@ require('./app/modules/db.js')(app);
 //#########################################################################
 //##########################STANDARD ROUTES################################
 //#########################################################################
+const get_data = require('./app/modules/get_data');
 
-router.get('/',async function(ctx){
+router.get('/', async function(ctx){
+  var coupon = ctx.session.coupon;
+  let coupon_data = await get_data(coupon); 
+  console.log(coupon_data);
   var id = ctx.session.id;
-  await ctx.render('template',{"userid" : id });
+  await ctx.render('template',{"userid" : id, "order_info": coupon_data});
 });
 
 //#########################################################################
@@ -78,6 +78,7 @@ router.post('/konto/login', async function(ctx){
  let loginCheck = await login_user(ctx.request.body);
   if(loginCheck)
   {
+    ctx.session.coupon = loginCheck.coupon.coupon_name;
     ctx.session.username = ctx.request.body.username;
     ctx.session.id = loginCheck._id;
     console.log("you are logged in from route");
@@ -121,57 +122,4 @@ router.post('/konto/rabattkod', async function(ctx){
   }
 });
 
-/* 
-NÄR MAN SKAPAR EN KOD SKA DEN LÄGGAS I USERNS "info" COLUMN SÅ ATT MAN SEDAN KAN GÖRA EN QUERY PÅ JUST DEN ANVÄNDARENS ID OCH HÄMTA DEN NÄR
-MAN SKA SPEGLA STATISIKEN PÅ STARTSIDAB
-
-infon om koden 
-SELECT * FROM wordpress.wp58_woocommerce_order_itemmeta where order_item_id=31;
-hur mycket det är som personen tjänat:
-om koden är ex. 10% off kan man egentligen bara räkna ut hur mycket startpriset är med summan/procent = startsumman(om det är summan efter eller före rabattkoden får jag bestämma)
-
-hitta om orderna använder sig av en kod
-SELECT * FROM wordpress.wp58_woocommerce_order_items;
-          (order-id)
-för att se ifall den order är pga influencern tex ifall de verkligen har använt en viss kod
-SELECT * FROM wordpress.wp58_woocommerce_order_items WHERE order_item_type="coupon";
-sedan tar man order_item_id och gör en query till SELECT * FROM wordpress.wp58_woocommerce_order_itemmeta where order_item_id=31; och där kan man se discount_amount
-*/
-
-var con = mysql.createConnection({
-  host: "178.128.194.96",
-  user: "runeschool",
-  password: 'olaheterintepeter'
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("mysql Connected!");
-  get_the_id();
-});
-
-function get_the_id(){
-  var sql = "SELECT * FROM wordpress.wp58_posts WHERE post_type='shop_coupon'";
-  con.query(sql, function(err,result){
-  if(err)throw err;
-    var get_id = JSON.parse(JSON.stringify(result));
-    var the_id = 0;
-    get_id.forEach(element => {
-      the_id = element.ID;
-    });
-    get_the_count(the_id);
-});
-}
-
-function get_the_count(id){
-    var sent_id = id;
-    var sql = `SELECT * FROM wordpress.wp58_postmeta WHERE post_id=${sent_id} AND meta_key='usage_count'`;
-  con.query(sql, function(err,result){
-    if(err)throw err;
-    var result_info = JSON.parse(JSON.stringify(result));
-    result_info.forEach(element => {
-    });
-  });
-}
- 
 app.listen(3000, console.log("3000"));
