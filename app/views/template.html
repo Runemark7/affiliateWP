@@ -8,10 +8,13 @@
     <!-- css -->
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/menu.css" rel="stylesheet" type="text/css">
+    <link href="css/content.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
     <title>Document</title>
 </head>
 <body>
+    <h1><%- userid %></h1>
 <div id="topbar-wrapper">
     <div id="topbar">
         <div id="topbar-title">Worryless</div>
@@ -64,17 +67,105 @@
                     <span>statistik</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="konto/rabattkod" class="nav-link">
+                    <span>Rabattkod</span>
+                </a>
+            </li>
         </ul>
     </div>
 
     <div id="content-wrapper">
-            <h1>contet-wrapper</h1>
+        <div id="infoNumberWrapper">
+            <div id="pending" class="infoNumber">pending</div>
+            <div id="accepted" class="infoNumber">accepted</div>
+            <div id="declined" class="infoNumber">declined</div>
+        </div>
 
-<!--
-    <% order_info.forEach(function(res){%>
-            <h1><%= res.meta_value %></h1>
-        <% }); %>
--->        
+        <div id="chartWrapper">
+            <div class="chart">
+                    <canvas id="myChart1" ></canvas>
+            </div>
+            <div class="chart">
+                    <canvas id="myChart2" ></canvas>
+            </div>
+        </div>
+        <script>
+        var ctx = document.getElementById('myChart1').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"],
+                datasets: [{
+                    label: "Försäljning",
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [{
+                        x: new Date(),
+                        y: 10
+                    }, {
+                        t: new Date(),
+                        y: 11
+                    },
+                    {
+                        x: new Date(),
+                        y: 6
+                    },
+                    {
+                        x: new Date(),
+                        y: 4
+                    },
+                    {
+                        x: new Date(),
+                        y: 30
+                    },
+                    {
+                        x: new Date(),
+                        y: 12
+                    },
+                    {
+                        x: new Date(),
+                        y: 1
+                    }],
+                    
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                    label: "My First dataset",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 10, 5, 2, 20, 30, 45],
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+
+
+</script>
+         
+    <!--
+
+<% order_info.forEach(function(res){ %>
+        <h1><%= res.meta_value %></h1>
+    <% }); %>
+    -->
+
     </div>
 </div>
 </body>

@@ -6,6 +6,7 @@ const parser = require('koa-bodyparser');
 const static = require('koa-static');
 const render = require('koa-ejs');
 const path = require('path');
+const Chart = require('chart.js');
 const app = new Koa();
 const router = new Router();
 const auth = require("./app/middleware/check_session");
@@ -39,6 +40,7 @@ app.use(session(CONFIG,app));  // Include the session middleware
 app.use(static('public'));
 
 //standard 
+
 app.use(parser());
 app.use(router.routes());
 app.use(router.allowedMethods());
@@ -51,9 +53,19 @@ require('./app/modules/db.js')(app);
 const get_data = require('./app/modules/get_data');
 
 router.get('/', async function(ctx){
-  var coupon = ctx.session.coupon;
-  let coupon_data = await get_data(coupon); 
-  console.log(coupon_data);
+  var coupon_name = ctx.session.coupon;
+  var coupon_data = [];
+
+  if(coupon_name != "")
+  {
+    let get_info = await get_data(coupon_name); 
+    coupon_data.push(get_info);
+  }
+  else{
+    ctx.body = "create a coupon to get this";
+    console.log("add coupon");
+  }
+
   var id = ctx.session.id;
   await ctx.render('template',{"userid" : id, "order_info": coupon_data});
 });
@@ -78,7 +90,15 @@ router.post('/konto/login', async function(ctx){
  let loginCheck = await login_user(ctx.request.body);
   if(loginCheck)
   {
-    ctx.session.coupon = loginCheck.coupon.coupon_name;
+    console.log(loginCheck);
+    if(loginCheck.coupon.coupon_name != null)
+    {
+      ctx.session.coupon = loginCheck.coupon.coupon_name;
+    }
+    else{
+      console.log("user dont got a coupon");
+    }
+
     ctx.session.username = ctx.request.body.username;
     ctx.session.id = loginCheck._id;
     console.log("you are logged in from route");
