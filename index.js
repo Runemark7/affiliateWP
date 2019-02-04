@@ -9,7 +9,10 @@ const path = require('path');
 const Chart = require('chart.js');
 const app = new Koa();
 const router = new Router();
+
+//MIDDLEWARE
 const auth = require("./app/middleware/check_session");
+const coupon = require("./app/middleware/check_coupon");
 
 ////////////////////////////////////////CONFIGS/////////////////////////////////////////
 const CONFIG = {
@@ -52,22 +55,12 @@ require('./app/modules/db.js')(app);
 //#########################################################################
 const get_data = require('./app/modules/get_data');
 
-router.get('/', async function(ctx){
+router.get('/',coupon,async function(ctx){
   var coupon_name = ctx.session.coupon;
-  var coupon_data = [];
-
-  if(coupon_name != "")
-  {
-    let get_info = await get_data(coupon_name); 
-    coupon_data.push(get_info);
-  }
-  else{
-    ctx.body = "create a coupon to get this";
-    console.log("add coupon");
-  }
-
+  let get_info = await get_data(coupon_name);
+  console.log(get_info);
   var id = ctx.session.id;
-  await ctx.render('template',{"userid" : id, "order_info": coupon_data});
+  await ctx.render('template',{"userid" : id, "order_info": get_info});
 });
 
 //#########################################################################

@@ -7,33 +7,16 @@ const mysql = require('mysql');
     }); 
 
 module.exports =  function(coupon){
-    return new Promise(function(resolve, reject){
-        con.connect( function(err) {
-            if (err) throw err;
-            var sql = `SELECT * FROM wordpress.wp58_woocommerce_order_items WHERE order_item_name='${coupon}'`;
-            con.query(sql, async function(err,result){
+    return new Promise( function(resolve, reject){
+            con.connect( function(err){if(err)throw err;});
+            var sql = `SELECT post_id,post_modified,meta_key, meta_value,post_status FROM wordpress.wp58_woocommerce_order_items
+            INNER JOIN wordpress.wp58_postmeta ON wordpress.wp58_woocommerce_order_items.order_id = wordpress.wp58_postmeta.post_id
+            INNER JOIN wordpress.wp58_posts ON wordpress.wp58_posts.ID = wordpress.wp58_postmeta.post_id
+            WHERE order_item_name="10procentoff" AND meta_key="_order_total"`;
+            con.query(sql, function(err,result){
                 if(err)reject(err.message);
-                order_ids = [];
-                result.forEach(element => {
-                    order_ids.push(element.order_id);
-                });
-
-                order_ids.forEach(id=>{
-                    var sql_order = `SELECT * FROM wordpress.wp58_postmeta where post_id in (?)`;
-                    con.query(sql_order, [order_ids] , function(err,result){
-                        if(err)throw err;
-                        console.log("huhe");
-                        console.log(result._paid_date);
-                        resolve();
-                    });
-                });
+                resolve(result);
+                con.end();
             });
-        });
     });
 }
-                /* 
-                    1. Hämta datan klar
-                    2. SELECT * FROM wordpress.wp58_postmeta where post_id=alla ordrars idn; klar
-                    3. Kolla om ordern är pending eller success 
-                    4. Pending = orange/gul success = grön och utgå ifrån de värderna
-                */

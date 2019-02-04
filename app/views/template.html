@@ -158,15 +158,13 @@
 
 
 </script>
-         
-    <!--
-
-<% order_info.forEach(function(res){ %>
-        <h1><%= res.meta_value %></h1>
-    <% }); %>
-    -->
-
+        </div>
     </div>
-</div>
+    <h1><%- order_info %></h1>
+   <!--
+    <% for(i=0; i<=order_info.length; i++){%>
+        <h1><%- order_info.meta_value[i] + order_info.meta_value[i+1] %></h1>
+    <% } %>
+   --> 
 </body>
 </html>
