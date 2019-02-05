@@ -15,21 +15,31 @@
 #topbar{
     height:5vh;
     width:100%;
-    background-color:pink;
+    background-color:#fff;
     display:flex;
     justify-content: space-between;
+   
 }
-
+#topbar-account-title{
+    height:5vh;
+    text-align: center;
+    line-height: 5vh;
+}
 #topbar-account{
     width:10%;
-    height:Auto;
+    height: auto;
 }
 
 #topbar-title{
     position: relative;
     display: inline-block;
-    width:20%;
-    text-align: center;
+    width:15%;
+    text-align: left;
+    height:5vh;
+    line-height: 5vh;
+    font-size:28px;
+    cursor: pointer;
+    margin-left:1.5%;
 }
 
 #dropdown-item-wrapper{

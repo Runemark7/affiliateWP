@@ -1,20 +1,50 @@
+#content-wrapper{
+    background-color:#EFEFF6;
+}
 #chartWrapper{
     width:100%;
     height:auto;
-    background-color: burlywood;
+    background-color:#fff;
     display:flex;
+}
+.chartTitle{
+    font-size:18px;
+    line-height: 26px;
+    color:#7171a6;
+    margin: 0px 0px 15px 0px;
+    font-weight: 600;
+    flex: 1 1 auto;
+}
+.numbers{
+    width:100%;
 }
 .chart{
     padding:20px;
-    width:calc(100%/2);
-    height:auto;
-}
-#infoNumberWrapper{
-    text-align: center;
-    display:flex;
-}
-.infoNumber{
-    padding:20px;
     width:calc(100%/3);
     height:auto;
+}
+#orders-wrapper{
+    padding:1%;
+    width:80%;
+    margin:auto;
+    background-color: #fff;
+}
+#orders{
+    width:100%;
+    display:flex;
+}
+.orderItem{
+    
+}
+
+#red{
+    background-color: red;
+}
+
+#orange{
+    background-color: orange;
+}
+
+#green{
+    background-color: green;
 }

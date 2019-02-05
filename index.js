@@ -16,11 +16,8 @@ const coupon = require("./app/middleware/check_coupon");
 
 ////////////////////////////////////////CONFIGS/////////////////////////////////////////
 const CONFIG = {
-  key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
-  /** (number || 'session') maxAge in ms (default is 1 days) */
-  /** 'session' will result in a cookie that expires when session/browser is closed */
-  /** Warning: If a session cookie is stolen, this cookie will never expire */
-  maxAge: 86400000,
+  key: 'koa:sess',
+    maxAge: 86400000,
   autoCommit: true, /** (boolean) automatically commit headers (default true) */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
   httpOnly: true, /** (boolean) httpOnly or not (default true) */
@@ -53,14 +50,22 @@ require('./app/modules/db.js')(app);
 //#########################################################################
 //##########################STANDARD ROUTES################################
 //#########################################################################
+
 const get_data = require('./app/modules/get_data');
 
 router.get('/',coupon,async function(ctx){
   var coupon_name = ctx.session.coupon;
   let get_info = await get_data(coupon_name);
-  console.log(get_info);
+
+  var numbers = [];
+  get_info.forEach(res=>{
+    numbers.push(parseInt(res.meta_value));
+  });
+  var sum = numbers.reduce(function(total,num){
+    return total + Math.round(num);
+  });
   var id = ctx.session.id;
-  await ctx.render('template',{"userid" : id, "order_info": get_info});
+  await ctx.render('template',{"userid" : id,"total_sale": sum, "order_info": get_info});
 });
 
 //#########################################################################

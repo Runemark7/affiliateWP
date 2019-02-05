@@ -6,5 +6,4 @@ module.exports = async function(ctx,next){
     else{
         ctx.body = "add coupon ffs";
     }
-
 }

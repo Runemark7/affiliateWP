@@ -14,7 +14,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1><%- userid %></h1>
 <div id="topbar-wrapper">
     <div id="topbar">
         <div id="topbar-title">Worryless</div>
@@ -76,18 +75,35 @@
     </div>
 
     <div id="content-wrapper">
-        <div id="infoNumberWrapper">
-            <div id="pending" class="infoNumber">pending</div>
-            <div id="accepted" class="infoNumber">accepted</div>
-            <div id="declined" class="infoNumber">declined</div>
-        </div>
+     
 
         <div id="chartWrapper">
             <div class="chart">
+
+                <div class="chartTitle"><span>Försäljning</span>
+                    <div class="amount"><%- total_sale %> KR</div> <div class="percentage"></div>
+                </div>
+
+
                     <canvas id="myChart1" ></canvas>
             </div>
             <div class="chart">
+
+                <div class="chartTitle"><span>Din andel (20%)</span>
+                    <div class="amount"><%- Math.round(total_sale*0.2) %> KR</div> <div class="percentage"></div>
+                </div>
+
+
                     <canvas id="myChart2" ></canvas>
+            </div>
+            <div class="chart">
+
+                <div class="chartTitle"><span>Total Revenue</span>
+                    <div class="amount">något</div> <div class="percentage"></div>
+                </div>
+
+
+                    <canvas id="myChart3" ></canvas>
             </div>
         </div>
         <script>
@@ -155,16 +171,48 @@
             // Configuration options go here
             options: {}
         });
+        var ctx = document.getElementById('myChart3').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
 
+            // The data for our dataset
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                    label: "My First dataset",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 10, 5, 2, 20, 30, 45],
+                }]
+            },
 
-</script>
-        </div>
+            // Configuration options go here
+            options: {}
+        });
+        </script>
+      <div id="orders-wrapper"> 
+        <% order_info.forEach(res=>{ %>
+            <div id="orders">
+                <div class="orderItem"><%- res['post_modified'].toString().split(" ").splice(0,5).join(" ") %></div>
+                <div class="orderItem"><%- res['meta_value'] %></div>
+                <% if(res['post_status'] = "wc-cancelled"){ %>
+                <div class="orderItem" id="red"><%- res['post_status'] %></div>
+                <% }else if(res['post_status'] = "wc-pending"){ %>
+                <div class="orderItem" id="orange"><%- res['post_status'] %></div>
+                <% }else{ %>
+                <div class="orderItem" id="green"><%- res['post_status'] %></div>  
+                <% } %>
+            </div>
+        <% }); %>
     </div>
-    <h1><%- order_info %></h1>
-   <!--
-    <% for(i=0; i<=order_info.length; i++){%>
-        <h1><%- order_info.meta_value[i] + order_info.meta_value[i+1] %></h1>
-    <% } %>
-   --> 
+       
+
+    </div>
+</div>
+
+  
+   
+  
 </body>
 </html>
