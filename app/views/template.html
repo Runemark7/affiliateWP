@@ -16,7 +16,7 @@
 <body>
 <div id="topbar-wrapper">
     <div id="topbar">
-        <div id="topbar-title">Worryless</div>
+        <div id="topbar-title"><a href="#"><img src="https://worryless.se/wp-content/uploads/2018/11/worryless-text-1024x73.png"></img></a></div>
         <div id="topbar-account">
             <div id="topbar-account-title">Konto</div>
             <div id="dropdown-item-wrapper">
@@ -75,37 +75,43 @@
     </div>
 
     <div id="content-wrapper">
-     
+        <h5 id="contentTitle">Datan innefattar de 30 senaste dagarna</h5>
+            <div id="chartWrapper">
+                <div class="chart-inside">
+                    <div class="chart-inside-inside">
+                        <div class="chartTitle"><span>Försäljning</span>
+                            <div class="amount"><%- total_sale %> KR</div> <div class="percentage"></div>
+                        </div>    
+                    </div>
+                </div>
+            
+                <div class="chart-inside">
+                    <div class="chart-inside-inside">
+                        <div class="chartTitle"><span>Din andel (20%)</span>
+                            <div class="amount"><%- Math.round(total_sale*0.2) %> KR</div> <div class="percentage"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-inside">
+                    <div class="chart-inside-inside">
+                        <div class="chartTitle"><span>Total Revenue</span>
+                            <div class="amount">något</div> <div class="percentage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <div id="chartWrapper">
-            <div class="chart">
-
-                <div class="chartTitle"><span>Försäljning</span>
-                    <div class="amount"><%- total_sale %> KR</div> <div class="percentage"></div>
+                <div class="chart">
+                        <canvas id="myChart1" ></canvas>
+                </div> 
+                <div class="chart">
+                        <canvas id="myChart2" ></canvas>
                 </div>
-
-
-                    <canvas id="myChart1" ></canvas>
-            </div>
-            <div class="chart">
-
-                <div class="chartTitle"><span>Din andel (20%)</span>
-                    <div class="amount"><%- Math.round(total_sale*0.2) %> KR</div> <div class="percentage"></div>
-                </div>
-
-
-                    <canvas id="myChart2" ></canvas>
-            </div>
-            <div class="chart">
-
-                <div class="chartTitle"><span>Total Revenue</span>
-                    <div class="amount">något</div> <div class="percentage"></div>
-                </div>
-
-
-                    <canvas id="myChart3" ></canvas>
-            </div>
         </div>
+
+           
+          
         <script>
         var ctx = document.getElementById('myChart1').getContext('2d');
         var chart = new Chart(ctx, {
@@ -152,6 +158,7 @@
             // Configuration options go here
             options: {}
         });
+        
         var ctx = document.getElementById('myChart2').getContext('2d');
         var chart = new Chart(ctx, {
             // The type of chart we want to create
@@ -171,42 +178,28 @@
             // Configuration options go here
             options: {}
         });
-        var ctx = document.getElementById('myChart3').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "My First dataset",
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45],
-                }]
-            },
-
-            // Configuration options go here
-            options: {}
-        });
         </script>
-      <div id="orders-wrapper"> 
-        <% order_info.forEach(res=>{ %>
-            <div id="orders">
-                <div class="orderItem"><%- res['post_modified'].toString().split(" ").splice(0,5).join(" ") %></div>
-                <div class="orderItem"><%- res['meta_value'] %></div>
-                <% if(res['post_status'] = "wc-cancelled"){ %>
-                <div class="orderItem" id="red"><%- res['post_status'] %></div>
-                <% }else if(res['post_status'] = "wc-pending"){ %>
-                <div class="orderItem" id="orange"><%- res['post_status'] %></div>
-                <% }else{ %>
-                <div class="orderItem" id="green"><%- res['post_status'] %></div>  
-                <% } %>
+        <div id="order-wrapper">
+            <div id="orders-wrapper"> 
+                <% order_info.forEach(res=>{ %>
+                    <div id="orders">
+                        <div class="orderItem"><%- res['post_modified'].toString().split(" ").splice(0,5).join(" ") %></div>
+                        <div class="orderItem"><%- Math.round(res['meta_value']) %> kr</div>
+                        <% if(res['post_status'] = "wc-cancelled"){ %>
+                        <div class="orderItem"><div id="red"></div>Cancelled</div>
+                        <% }else if(res['post_status'] = "wc-pending"){ %>
+                        <div class="orderItem"><div id="orange"></div>Pending</div>
+                        <% }else{ %>
+                        <div class="orderItem"><div id="green"></div>Accepted</div>  
+                        <% } %>
+                    </div>
+                <% }); %>
             </div>
-        <% }); %>
-    </div>
-       
+
+            <div id="totalorders_wrapper">
+                <input type="date" id="calender">
+            </div>
+        </div>
 
     </div>
 </div>

@@ -2,8 +2,8 @@ const mysql = require('mysql');
 
 var con = mysql.createConnection({
     host: "178.128.194.96",
-    user: "runehemma",
-    password: 'lennartgillar'
+    user: "runeschool",
+    password: 'olaheterintepeter'
 }); 
 
 module.exports = function(uname,app,coupon_name){

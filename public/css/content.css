@@ -1,11 +1,15 @@
 #content-wrapper{
-    background-color:#EFEFF6;
+    padding:20px;
+}
+#contentTitle{
+    text-align: center;
+    font-weight: 600;
 }
 #chartWrapper{
     width:100%;
     height:auto;
-    background-color:#fff;
     display:flex;
+    flex-wrap: wrap;
 }
 .chartTitle{
     font-size:18px;
@@ -13,38 +17,84 @@
     color:#7171a6;
     margin: 0px 0px 15px 0px;
     font-weight: 600;
-    flex: 1 1 auto;
+}
+.chart-inside{
+    width: calc(100%/3);
+    padding:20px;
+}
+.chart-inside-inside{
+    background-color:#fff;
+    padding:10px;
 }
 .numbers{
     width:100%;
 }
 .chart{
-    padding:20px;
-    width:calc(100%/3);
+    width:50%;
     height:auto;
+    flex-wrap: wrap;
 }
+.chart:first-child{
+    flex: 0 0 50%;
+}
+.chart:nth-child(2){
+    flex: 0 0 50%;
+}
+
+
+
+
+
 #orders-wrapper{
     padding:1%;
-    width:80%;
-    margin:auto;
+    width:40%;
     background-color: #fff;
+    vertical-align: middle;
 }
 #orders{
     width:100%;
     display:flex;
 }
 .orderItem{
-    
+    flex:1 0 auto;
+    vertical-align: middle;
+    text-align: center;
 }
+
+
 
 #red{
     background-color: red;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin: 0px 5px 0px 5px;
+    display: inline-block;
 }
 
 #orange{
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
     background-color: orange;
 }
 
 #green{
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
     background-color: green;
+}
+
+#order-wrapper{
+    width:100%;
+    height:auto;
+    background-color:#fff;
+    display:flex;
+}
+#totalorders_wrapper{
+    width:60%;
+    height:auto;
 }
