@@ -9,14 +9,18 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/menu.css" rel="stylesheet" type="text/css">
     <link href="css/content.css" rel="stylesheet" type="text/css">
+    <link href="css/smallshit.css" rel="stylesheet" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
+    <!-- js -->
+    <script src="js/everything.js"></script>
     <title>Document</title>
 </head>
 <body>
 <div id="topbar-wrapper">
     <div id="topbar">
         <div id="topbar-title"><a href="#"><img src="https://worryless.se/wp-content/uploads/2018/11/worryless-text-1024x73.png"></img></a></div>
+        <div id="clock"></div>
+       
         <div id="topbar-account">
             <div id="topbar-account-title">Konto</div>
             <div id="dropdown-item-wrapper">
@@ -115,15 +119,17 @@
         <script>
         var ctx = document.getElementById('myChart1').getContext('2d');
         var chart = new Chart(ctx, {
-            // The type of chart we want to create
             type: 'line',
-
-            // The data for our dataset
             data: {
                 labels: ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"],
                 datasets: [{
-                    label: "Försäljning",
-                    borderColor: 'rgb(255, 99, 132)',
+                    label: "My First dataset",
+      fillColor: "rgba(120,120,120,0.2)",
+      strokeColor: "rgba(120,120,120,1)",
+      pointColor: "rgba(120,120,120,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(120,120,120,1)",
                     data: [{
                         x: new Date(),
                         y: 10
@@ -154,28 +160,21 @@
                     
                 }]
             },
-
-            // Configuration options go here
             options: {}
         });
         
         var ctx = document.getElementById('myChart2').getContext('2d');
         var chart = new Chart(ctx, {
-            // The type of chart we want to create
             type: 'line',
-
-            // The data for our dataset
             data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                labels: ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"],
                 datasets: [{
-                    label: "My First dataset",
+                    label: "",
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: [0, 10, 5, 2, 20, 30, 45],
                 }]
             },
-
-            // Configuration options go here
             options: {}
         });
         </script>
@@ -197,7 +196,10 @@
             </div>
 
             <div id="totalorders_wrapper">
-                <input type="date" id="calender">
+                <form action="getdate" method="get">
+                    <input type="date" name="date" id="calender">
+                    <input type="submit" value="Get data">
+                </form>
             </div>
         </div>
 

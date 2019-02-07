@@ -4,6 +4,6 @@ module.exports = async function(ctx,next){
         await next();
     }
     else{
-        ctx.body = "add coupon ffs";
+        ctx.body = "No coupon found, login or create a coupon";
     }
 }

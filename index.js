@@ -139,5 +139,11 @@ router.post('/konto/rabattkod', async function(ctx){
     ctx.body = "coupon failed, test again";
   }
 });
+router.get('/getdate/:date', async function(ctx){
+  console.log(ctx.query.date);
+  ctx.body = "heuhuheu";
+
+});
+
 
 app.listen(3000, console.log("3000"));

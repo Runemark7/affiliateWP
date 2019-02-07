@@ -16,7 +16,6 @@ module.exports =  function(coupon){
             con.query(sql, function(err,result){
                 if(err)reject(err.message);
                 resolve(result);
-                con.end();
             });
     });
 }
