@@ -106,77 +106,87 @@
             </div>
 
         <div id="chartWrapper">
+            <div class="inside-chart">
                 <div class="chart">
                         <canvas id="myChart1" ></canvas>
                 </div> 
-                <div class="chart">
-                        <canvas id="myChart2" ></canvas>
-                </div>
+            </div>
         </div>
 
            
           
         <script>
+       
         var ctx = document.getElementById('myChart1').getContext('2d');
         var chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"],
                 datasets: [{
-                    label: "My First dataset",
-      fillColor: "rgba(120,120,120,0.2)",
-      strokeColor: "rgba(120,120,120,1)",
-      pointColor: "rgba(120,120,120,1)",
-      pointStrokeColor: "#fff",
-      pointHighlightFill: "#fff",
-      pointHighlightStroke: "rgba(120,120,120,1)",
+                    fillColor: "rgba(120,120,120,0.2)",
+                    strokeColor: "rgba(120,120,120,1)",
+                    pointColor: "rgba(120,120,120,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(120,120,120,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: 'red',
                     data: [{
                         x: new Date(),
-                        y: 10
+                        y: "<%- Math.round(måndag) %>"
                     }, {
                         t: new Date(),
-                        y: 11
+                        y: "<%- Math.round(tisdag) %>"
                     },
                     {
                         x: new Date(),
-                        y: 6
+                        y: "<%- Math.round(onsdag) %>"
                     },
                     {
                         x: new Date(),
-                        y: 4
+                        y: "<%- Math.round(torsdag) %>"
                     },
                     {
                         x: new Date(),
-                        y: 30
+                        y: "<%- Math.round(fredag) %>" 
                     },
                     {
                         x: new Date(),
-                        y: 12
+                        y: "<%- Math.round(lördag) %>"
                     },
                     {
                         x: new Date(),
-                        y: 1
+                        y: "<%- Math.round(söndag) %>"
                     }],
                     
                 }]
             },
-            options: {}
+            options : {
+                    scales : {
+                        xAxes : [ {
+                            gridLines : {
+                                display : false
+                            }
+                        } ],
+                        yAxes : [ {
+                            gridLines : {
+                                display : false
+                            }
+                        } ]
+                    },
+                    legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            callbacks: {
+                            label: function(tooltipItem) {
+                                    return tooltipItem.yLabel;
+                            }
+                            }
+                        }
+                }
         });
-        
-        var ctx = document.getElementById('myChart2').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"],
-                datasets: [{
-                    label: "",
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45],
-                }]
-            },
-            options: {}
-        });
+
         </script>
         <div id="order-wrapper">
             <div id="orders-wrapper"> 
@@ -184,19 +194,19 @@
                     <div id="orders">
                         <div class="orderItem"><%- res['post_modified'].toString().split(" ").splice(0,5).join(" ") %></div>
                         <div class="orderItem"><%- Math.round(res['meta_value']) %> kr</div>
-                        <% if(res['post_status'] = "wc-cancelled"){ %>
-                        <div class="orderItem"><div id="red"></div>Cancelled</div>
-                        <% }else if(res['post_status'] = "wc-pending"){ %>
-                        <div class="orderItem"><div id="orange"></div>Pending</div>
+                        <% if(res['post_status'] == "wc-cancelled"){ %>
+                        <div class="orderItem"><div id="red"></div>Avbruten</div>
+                        <% }else if(res['post_status'] == "wc-processing"){ %>
+                        <div class="orderItem"><div id="orange"></div>Behandlas</div>
                         <% }else{ %>
-                        <div class="orderItem"><div id="green"></div>Accepted</div>  
+                        <div class="orderItem"><div id="green"></div>Färdig</div>  
                         <% } %>
                     </div>
                 <% }); %>
             </div>
 
             <div id="totalorders_wrapper">
-                <form action="getdate" method="get">
+                <form action="getdate" method="post">
                     <input type="date" name="date" id="calender">
                     <input type="submit" value="Get data">
                 </form>

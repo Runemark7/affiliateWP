@@ -6,7 +6,6 @@ const parser = require('koa-bodyparser');
 const static = require('koa-static');
 const render = require('koa-ejs');
 const path = require('path');
-const Chart = require('chart.js');
 const app = new Koa();
 const router = new Router();
 
@@ -56,16 +55,141 @@ const get_data = require('./app/modules/get_data');
 router.get('/',coupon,async function(ctx){
   var coupon_name = ctx.session.coupon;
   let get_info = await get_data(coupon_name);
-
+  async function call_func(){
+    let get_info = await get_data(coupon_name);
+  }
+  setInterval(call_func, 5000);
   var numbers = [];
-  get_info.forEach(res=>{
-    numbers.push(parseInt(res.meta_value));
-  });
-  var sum = numbers.reduce(function(total,num){
-    return total + Math.round(num);
-  });
+
+  var måndag = [];
+  var tisdag = [];
+  var onsdag = [];
+  var torsdag = [];
+  var fredag = [];
+  var lördag = [];
+  var söndag = [];
+  
+  //  weekdays
+  var date = new Date();
+  var stop = date.getTime();
+  var days = date.getDay() -1;
+  var daysinms = days*(3600*1000*24);
+  var start = stop-daysinms; 
+  var dateStart = new Date(start);
+  var dateStop = new Date(stop);
+  var dataStart = dateStart.toString().split(" ").slice(1,4);
+  var dataStop = dateStop.toString().split(" ").slice(1,4);
+
+      get_info.forEach(res=>{
+        if(res.post_status == "wc-completed")
+        {
+          numbers.push(parseInt(res.meta_value));
+        }
+        var dates = res.post_modified.toString().split(" ");
+        var sevenDay = dates.slice(1,4);
+        if((sevenDay[0] == dataStart[0]) && (sevenDay[1] >= dataStart[1] && sevenDay[1] <= dataStop[1]) && (sevenDay[2] == dataStop[2]))
+        {
+          if(dates[0] == "Mon")
+          {
+            måndag.push(res.meta_value);
+          }
+          else if(dates[0] == "Tue"){
+            tisdag.push(res.meta_value);
+          }
+          else if(dates[0] == "Wed"){
+            onsdag.push(res.meta_value);
+          }
+          else if(dates[0] == "Thu"){
+            torsdag.push(res.meta_value);
+          }
+          else if(dates[0] == "Fri"){
+            fredag.push(res.meta_value);
+          }
+          else if(dates[0] == "Sat"){
+            lördag.push(res.meta_value);
+          }
+          else if(dates[0] == "Sun"){
+            söndag.push(res.meta_value);
+          }
+          else{
+            console.log("wtf heuhhuehuehu");
+          }
+        }
+        else{
+        }
+      });
+
+    if(måndag !=0)
+    {  
+      var mån = måndag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       mån = 0;
+    }
+    if(tisdag !=0)
+    {  
+      var tis = tisdag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       tis = 0;
+    }
+    if(onsdag !=0)
+    {  
+      var tis = onsdag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       ons = 0;
+    }
+    if(torsdag !=0)
+    {  
+      var tor = torsdag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       tor = 0;
+    }
+    if(fredag !=0)
+    {  
+      var fre = fredag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       fre = 0;
+    }
+    if(lördag !=0)
+    {  
+      var lör = lördag.reduce(function(total,num){
+        return total + Math.round(num);
+      }); 
+    }
+    else{
+       lör = 0;
+    }
+    if(söndag != 0)
+    {  
+      var sön = söndag.reduce(function(total,num){
+        return total + Math.round(num);
+      });
+    }
+    else{
+       sön = 0;
+    }
+
+    // total sales 
+    var sum = numbers.reduce(function(total,num){
+      return total + Math.round(num);
+    });
+  
   var id = ctx.session.id;
-  await ctx.render('template',{"userid" : id,"total_sale": sum, "order_info": get_info});
+  await ctx.render('template',{"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
 });
 
 //#########################################################################
@@ -139,8 +263,8 @@ router.post('/konto/rabattkod', async function(ctx){
     ctx.body = "coupon failed, test again";
   }
 });
-router.get('/getdate/:date', async function(ctx){
-  console.log(ctx.query.date);
+router.post('/getdate', async function(ctx){
+  console.log(ctx.request.body);
   ctx.body = "heuhuheu";
 
 });
