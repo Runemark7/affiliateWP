@@ -1,19 +1,11 @@
-const mysql = require('mysql');
-
-var con = mysql.createConnection({
-    host: "178.128.194.96",
-    user: "runeschool",
-    password: 'olaheterintepeter'
-}); 
-
-module.exports = function(uname,app,coupon_name){
+module.exports = function(uname,app,coupon_name,con){
     return new Promise(function(resolve, reject){
         app.users.findOne({username : uname}, function(err, result){
             if(err){reject(false); throw err;}
             app.users.updateOne({username : uname}, {$set:{coupon : coupon_name}}, function(err,result){
                 if(err){reject(false); throw err;}
                 console.log("coupon added to " + uname);
-                if(create_coupon(uname, coupon_name)){
+                if(create_coupon(uname, coupon_name,con)){
                     resolve(coupon_name);
                 }
             });
@@ -21,11 +13,7 @@ module.exports = function(uname,app,coupon_name){
     });
 }
 
-async function create_coupon(uname,coupon_name_obj){
-    con.connect(function(err) {
-        if (err) throw err;
-        console.log("mysql Connected!");
-
+async function create_coupon(uname,coupon_name_obj,con){
         var c_name = coupon_name_obj.coupon_name;
         var sql = `INSERT INTO wordpress.wp58_posts(post_date, post_date_gmt, post_modified, post_modified_gmt, post_excerpt, to_ping, pinged, post_content_filtered, post_title, post_content, post_status, post_author, post_type)values(NOW(),NOW(),NOW(),NOW(),'${uname}','','','','${c_name}', '', 'publish', '1', 'shop_coupon')`;
         con.query(sql, function(err,result){
@@ -70,5 +58,4 @@ async function create_coupon(uname,coupon_name_obj){
             });
    
 
-        });
     }

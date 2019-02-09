@@ -6,6 +6,7 @@ const parser = require('koa-bodyparser');
 const static = require('koa-static');
 const render = require('koa-ejs');
 const path = require('path');
+const mysql = require('mysql');
 const app = new Koa();
 const router = new Router();
 
@@ -52,13 +53,23 @@ require('./app/modules/db.js')(app);
 
 const get_data = require('./app/modules/get_data');
 
+// MYSQL CONNECTION
+var con = mysql.createConnection({
+  host: "178.128.194.96",
+  user: "runehemma",
+  password: 'lennartgillar'
+}); 
+con.connect(function(err){if(err)throw err;});
+
 router.get('/',coupon,async function(ctx){
   var coupon_name = ctx.session.coupon;
-  let get_info = await get_data(coupon_name);
+  let get_info = await get_data(coupon_name,con);
   async function call_func(){
-    let get_info = await get_data(coupon_name);
+    let get_info = await get_data(coupon_name,con);
+    return get_info;
   }
-  setInterval(call_func, 5000);
+  setInterval(call_func, 20000);
+  
   var numbers = [];
 
   var måndag = [];
@@ -69,7 +80,6 @@ router.get('/',coupon,async function(ctx){
   var lördag = [];
   var söndag = [];
   
-  //  weekdays
   var date = new Date();
   var stop = date.getTime();
   var days = date.getDay() -1;
@@ -87,7 +97,9 @@ router.get('/',coupon,async function(ctx){
         }
         var dates = res.post_modified.toString().split(" ");
         var sevenDay = dates.slice(1,4);
-        if((sevenDay[0] == dataStart[0]) && (sevenDay[1] >= dataStart[1] && sevenDay[1] <= dataStop[1]) && (sevenDay[2] == dataStop[2]))
+        
+        // eventuellt göra en query till databasen
+        if((sevenDay[1] >= dataStart[1] && sevenDay[1] <= dataStop[1]))
         {
           if(dates[0] == "Mon")
           {
@@ -254,7 +266,7 @@ router.get('/konto/rabattkod', async function(ctx){
 
 router.post('/konto/rabattkod', async function(ctx){
   var username = ctx.session.username;
-  if(add_coupon(username,app,ctx.request.body))
+  if(add_coupon(username,app,ctx.request.body,con))
   {
     ctx.body = "coupon added";
   }

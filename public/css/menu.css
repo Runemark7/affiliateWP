@@ -71,7 +71,8 @@
 
 /* MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU */
 #menu-wrapper{
-    width:15%;
+    width:20%;
+    height:auto;
 }
 #navbar{
     width:100%;

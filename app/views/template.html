@@ -80,7 +80,7 @@
 
     <div id="content-wrapper">
         <h5 id="contentTitle">Datan innefattar de 30 senaste dagarna</h5>
-            <div id="chartWrapper">
+            <div id="cardWrapper">
                 <div class="chart-inside">
                     <div class="chart-inside-inside">
                         <div class="chartTitle"><span>Försäljning</span>
@@ -105,13 +105,19 @@
                 </div>
             </div>
 
-        <div id="chartWrapper">
-            <div class="inside-chart">
-                <div class="chart">
-                        <canvas id="myChart1" ></canvas>
-                </div> 
-            </div>
-        </div>
+            <div class="chartWrapper-inside">
+                <div class="inside-chart">
+                    <div class="chart">
+                            <canvas id="myChart1" ></canvas>
+                    </div> 
+                </div>
+                <div class="inside-chart">
+                    <div id="month-wrapper">
+                        <div id="month-title"></div>
+                        <div id="total"></div>
+                    </div>
+                </div>
+             </div>
 
            
           
@@ -216,8 +222,5 @@
     </div>
 </div>
 
-  
-   
-  
 </body>
 </html>

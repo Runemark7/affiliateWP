@@ -1,3 +1,4 @@
+
 #content-wrapper{
     padding:20px;
 }
@@ -5,12 +6,26 @@
     text-align: center;
     font-weight: 600;
 }
-#chartWrapper{
+#cardWrapper{
     width:100%;
     height:auto;
     display:flex;
     flex-wrap: wrap;
 }
+.chartWrapper-inside{
+    width:100%;
+    height:auto;
+    display:flex;
+    justify-content: space-between;
+    padding:20px;
+    flex-wrap: wrap;
+}
+.inside-chart{
+    padding:10px;
+    background-color:#fff;
+    flex:0 0 48%;
+}
+
 .chartTitle{
     font-size:18px;
     line-height: 26px;
@@ -40,12 +55,7 @@
 .chart:nth-child(2){
     flex: 0 0 50%;
 }
-.inside-chart{
-    padding:10px;
-    background-color:#fff;
-    width:90%;
-    margin:auto;
-}
+
 
 
 
