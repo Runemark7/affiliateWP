@@ -7,6 +7,7 @@ const static = require('koa-static');
 const render = require('koa-ejs');
 const path = require('path');
 const mysql = require('mysql');
+const moment = require('moment');
 const app = new Koa();
 const router = new Router();
 
@@ -52,6 +53,7 @@ require('./app/modules/db.js')(app);
 //#########################################################################
 
 const get_data = require('./app/modules/get_data');
+const get_data_between = require('./app/modules/get_data_between');
 
 // MYSQL CONNECTION
 var con = mysql.createConnection({
@@ -72,64 +74,46 @@ router.get('/',coupon,async function(ctx){
   
   var numbers = [];
 
-  var måndag = [];
-  var tisdag = [];
-  var onsdag = [];
+  var måndag  = [];
+  var tisdag  = [];
+  var onsdag  = [];
   var torsdag = [];
-  var fredag = [];
-  var lördag = [];
-  var söndag = [];
+  var fredag  = [];
+  var lördag  = [];
+  var söndag  = [];
   
-  var date = new Date();
-  var stop = date.getTime();
-  var days = date.getDay() -1;
-  var daysinms = days*(3600*1000*24);
-  var start = stop-daysinms; 
-  var dateStart = new Date(start);
-  var dateStop = new Date(stop);
-  var dataStart = dateStart.toString().split(" ").slice(1,4);
-  var dataStop = dateStop.toString().split(" ").slice(1,4);
 
-      get_info.forEach(res=>{
-        if(res.post_status == "wc-completed")
+    get_info.forEach(res=>{
+     if(res.post_status == "wc-completed")
+      {
+        numbers.push(parseInt(res.meta_value));
+        var date = res.post_modified;
+        var week = moment(date).isoWeekday();
+
+        if(week == 1)
         {
-          numbers.push(parseInt(res.meta_value));
+          måndag.push(res.meta_value);
         }
-        var dates = res.post_modified.toString().split(" ");
-        var sevenDay = dates.slice(1,4);
-        
-        // eventuellt göra en query till databasen
-        if((sevenDay[1] >= dataStart[1] && sevenDay[1] <= dataStop[1]))
-        {
-          if(dates[0] == "Mon")
-          {
-            måndag.push(res.meta_value);
-          }
-          else if(dates[0] == "Tue"){
-            tisdag.push(res.meta_value);
-          }
-          else if(dates[0] == "Wed"){
-            onsdag.push(res.meta_value);
-          }
-          else if(dates[0] == "Thu"){
-            torsdag.push(res.meta_value);
-          }
-          else if(dates[0] == "Fri"){
-            fredag.push(res.meta_value);
-          }
-          else if(dates[0] == "Sat"){
-            lördag.push(res.meta_value);
-          }
-          else if(dates[0] == "Sun"){
-            söndag.push(res.meta_value);
-          }
-          else{
-            console.log("wtf heuhhuehuehu");
-          }
+        else if(week == 2){
+          tisdag.push(res.meta_value);
         }
-        else{
+        else if(week == 3){
+          onsdag.push(res.meta_value);
         }
-      });
+        else if(week == 4){
+          torsdag.push(res.meta_value);
+        }
+        else if(week == 5){
+          fredag.push(res.meta_value);
+        }
+        else if(week == 6){
+          lördag.push(res.meta_value);
+        }
+        else if(week == 7){
+          söndag.push(res.meta_value);
+        }
+     }
+    });
 
     if(måndag !=0)
     {  
@@ -194,7 +178,6 @@ router.get('/',coupon,async function(ctx){
     else{
        sön = 0;
     }
-
     // total sales 
     var sum = numbers.reduce(function(total,num){
       return total + Math.round(num);
@@ -278,7 +261,6 @@ router.post('/konto/rabattkod', async function(ctx){
 router.post('/getdate', async function(ctx){
   console.log(ctx.request.body);
   ctx.body = "heuhuheu";
-
 });
 
 
