@@ -58,12 +58,12 @@ const get_data_between = require('./app/modules/get_data_between');
 // MYSQL CONNECTION
 var con = mysql.createConnection({
   host: "178.128.194.96",
-  user: "runehemma",
-  password: 'lennartgillar'
+  user: "runeschool",
+  password: 'olaheterintepeter'
 }); 
 con.connect(function(err){if(err)throw err;});
 
-router.get('/',coupon,async function(ctx){
+router.get('/',async function(ctx){ // tog bort middleware auth lägg til senare
   var coupon_name = ctx.session.coupon;
   let get_info = await get_data(coupon_name,con);
   async function call_func(){
@@ -84,12 +84,14 @@ router.get('/',coupon,async function(ctx){
   
 
     get_info.forEach(res=>{
+      var date = res.post_modified;
+      var week = moment(date).isoWeekday();
+      var in_week = moment(date).isSame(new Date(), 'week');
+
      if(res.post_status == "wc-completed")
       {
         numbers.push(parseInt(res.meta_value));
-        var date = res.post_modified;
-        var week = moment(date).isoWeekday();
-
+        if(in_week == true){
         if(week == 1)
         {
           måndag.push(res.meta_value);
@@ -112,8 +114,9 @@ router.get('/',coupon,async function(ctx){
         else if(week == 7){
           söndag.push(res.meta_value);
         }
-     }
-    });
+      }
+    }
+     });
 
     if(måndag !=0)
     {  
@@ -182,8 +185,7 @@ router.get('/',coupon,async function(ctx){
     var sum = numbers.reduce(function(total,num){
       return total + Math.round(num);
     });
-  
-  var id = ctx.session.id;
+    var id = ctx.session.id;
   await ctx.render('template',{"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
 });
 
@@ -196,25 +198,28 @@ const login_user = require('./app/modules/login_user');
 const add_coupon = require('./app/modules/add_coupon');
 
 router.get('/konto',auth,async function(ctx){
-  await ctx.render('login_system/konto');
+  var id = ctx.session.id;
+
+  await ctx.render('login_system/konto',{"userid" : id});
 });
 
 router.get('/konto/login',async function(ctx){
-  await ctx.render('login_system/login');  
+  var id = ctx.session.id;
+
+  await ctx.render('login_system/login',{"userid" : id});  
 }); 
 
 router.post('/konto/login', async function(ctx){
  let loginCheck = await login_user(ctx.request.body);
   if(loginCheck)
   {
-    console.log(loginCheck);
-    if(loginCheck.coupon.coupon_name != null)
-    {
-      ctx.session.coupon = loginCheck.coupon.coupon_name;
-    }
-    else{
-      console.log("user dont got a coupon");
-    }
+//    if(loginCheck.coupon.coupon_name != undefined)
+  //  {
+    //  ctx.session.coupon = loginCheck.coupon.coupon_name;
+    //}
+    //else{
+      //console.log("user dont got a coupon");
+    //}
 
     ctx.session.username = ctx.request.body.username;
     ctx.session.id = loginCheck._id;
@@ -226,7 +231,9 @@ router.post('/konto/login', async function(ctx){
 });
 
 router.get('/konto/register', async function(ctx){
-    await ctx.render('login_system/register');
+  var id = ctx.session.id;
+
+    await ctx.render('login_system/register',{"userid" : id});
 });
 
 router.post('/konto/register', async function(ctx){
@@ -244,7 +251,9 @@ router.get('/konto/logout', async function(ctx){
 });
 
 router.get('/konto/rabattkod', async function(ctx){
-  await ctx.render('includes/insert_coupon');
+  var id = ctx.session.id;
+
+  await ctx.render('includes/insert_coupon',{"userid" : id});
 });
 
 router.post('/konto/rabattkod', async function(ctx){
@@ -259,8 +268,14 @@ router.post('/konto/rabattkod', async function(ctx){
   }
 });
 router.post('/getdate', async function(ctx){
-  console.log(ctx.request.body);
-  ctx.body = "heuhuheu";
+  var time = new Date();
+  time.getTime();
+  console.log(time);
+  var start = ctx.request.body.dateStart;
+  var stop = ctx.request.body.dateStop;
+  
+  let test = await get_data_between(start,stop,con);
+  console.log(test);
 });
 
 

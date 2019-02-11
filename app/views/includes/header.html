@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- css -->
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
+    <link href="css/content.css" rel="stylesheet" type="text/css">
+    <link href="css/smallshit.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  
+    <!-- js -->
+    <script src="js/everything.js"></script>
+  
+    <title>Worryless - Affiliate</title>
+</head>
+<body>
+<div id="topbar-wrapper">
+    <div id="topbar">
+        <div id="topbar-title"><a href="/"><img src="https://worryless.se/wp-content/uploads/2018/11/worryless-text-1024x73.png"></img></a></div>
+        <div id="clock"></div>
+       
+        <div id="topbar-account">
+            <div id="topbar-account-title">Konto</div>
+            <div id="dropdown-item-wrapper">
+                <% if(userid != null){ %>
+                <div class="dropdown-item">
+                    <a href="konto" class="dropdown-link">
+                        <span>Mitt konto</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="konto/settings" class="dropdown-link">
+                        <span>Inställningar</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="konto/logout" class="dropdown-link">
+                        <span>Logout</span>
+                    </a>
+                </div>
+                <% }else{ %>
+                <div class="dropdown-item">
+                    <a href="konto/login" class="dropdown-link">
+                        <span>Logga in</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="konto/register" class="dropdown-link">
+                        <span>Registrera</span>
+                    </a>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div id="wrapper">
+    <div id="menu-wrapper">
+        <ul id="navbar">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span>Startsida</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span>statistik</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="konto/rabattkod" class="nav-link">
+                    <span>Rabattkod</span>
+                </a>
+            </li>
+        </ul>
+    </div>
