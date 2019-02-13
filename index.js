@@ -186,7 +186,7 @@ router.get('/',async function(ctx){ // tog bort middleware auth lägg til senare
       return total + Math.round(num);
     });
     var id = ctx.session.id;
-  await ctx.render('template',{"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
+  await ctx.render('template',{"betweenSum": 0,"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
 });
 
 //#########################################################################
@@ -270,12 +270,23 @@ router.post('/konto/rabattkod', async function(ctx){
 router.post('/getdate', async function(ctx){
   var time = new Date();
   time.getTime();
-  console.log(time);
   var start = ctx.request.body.dateStart;
   var stop = ctx.request.body.dateStop;
-  
-  let test = await get_data_between(start,stop,con);
-  console.log(test);
+  var dateStart = new Date(start).toISOString().slice(0, 19).replace('T', ' ');
+  var dateStop = new Date(stop).toISOString().slice(0, 19).replace('T', ' ').replace('00:00:00', '23:59:59'); 
+  let test = await get_data_between(dateStart, dateStop,con);
+
+  numbers = [];
+
+  test.forEach(res=>{
+    numbers.push(res.meta_value);
+  });
+
+  var sum = numbers.reduce(function(total,num){
+    return total + Math.round(num);
+  });
+  var id = ctx.session.id;
+  await ctx.render('template',{"betweenSum" : sum, "userid" : id});  
 });
 
 
