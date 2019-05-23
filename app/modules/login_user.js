@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const loginUser = require('./../schemas/login_user_shema');
-
 module.exports = async function(send_user){
     return new Promise(function(resolve, reject){
         loginUser.findOne({ username : send_user.username }, function(err,result){

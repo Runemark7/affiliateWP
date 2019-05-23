@@ -18,7 +18,7 @@ const coupon = require("./app/middleware/check_coupon");
 ////////////////////////////////////////CONFIGS/////////////////////////////////////////
 const CONFIG = {
   key: 'koa:sess',
-    maxAge: 86400000,
+  maxAge: 86400000,
   autoCommit: true, /** (boolean) automatically commit headers (default true) */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
   httpOnly: true, /** (boolean) httpOnly or not (default true) */
@@ -27,6 +27,9 @@ const CONFIG = {
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
 
+app.keys = ['patrikgillarintedig'];
+
+app.use(session(CONFIG,app));
 render(app,{
   root: path.join(__dirname, 'app', 'views'),
   layout: false,
@@ -34,11 +37,7 @@ render(app,{
   cache: false,
   debug: false
 });
-
-app.keys = ['patrikgillarintedig'];
-
-app.use(session(CONFIG,app));  // Include the session middleware
-app.use(static('public'));
+app.use(static('public', path.join(__dirname, 'public')));
 
 //standard 
 
@@ -47,10 +46,6 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 require('./app/modules/db.js')(app);
-
-//#########################################################################
-//##########################STANDARD ROUTES################################
-//#########################################################################
 
 const get_data = require('./app/modules/get_data');
 const get_data_between = require('./app/modules/get_data_between');
@@ -63,14 +58,31 @@ var con = mysql.createConnection({
 }); 
 con.connect(function(err){if(err)throw err;});
 
-router.get('/',async function(ctx){ // tog bort middleware auth lägg til senare
+//#########################################################################
+//##########################STANDARD ROUTES################################
+//#########################################################################
+
+router.get('/',coupon,async function(ctx){
+ valueBetween = [];
+
+ if(ctx.query.dateStart != null && ctx.query.dateStop != null)
+ {
+    var time = new Date();
+    time.getTime();
+    var start = ctx.query.dateStart;
+    var stop = ctx.query.dateStop;
+    var dateStart = new Date(start).toISOString().slice(0, 19).replace('T', ' ');
+    var dateStop = new Date(stop).toISOString().slice(0, 19).replace('T', ' ').replace('00:00:00', '23:59:59'); 
+    let dataBetween = await get_data_between(dateStart, dateStop,con);
+    dataBetween.forEach(res=>{
+      valueBetween.push(parseInt(res.meta_value));
+    });
+ }
+ else{
+   valueBetween.push(0);
+ }
   var coupon_name = ctx.session.coupon;
   let get_info = await get_data(coupon_name,con);
-  async function call_func(){
-    let get_info = await get_data(coupon_name,con);
-    return get_info;
-  }
-  setInterval(call_func, 20000);
   
   var numbers = [];
 
@@ -85,9 +97,9 @@ router.get('/',async function(ctx){ // tog bort middleware auth lägg til senare
 
     get_info.forEach(res=>{
       var date = res.post_modified;
+      moment.locale('se');
       var week = moment(date).isoWeekday();
       var in_week = moment(date).isSame(new Date(), 'week');
-
      if(res.post_status == "wc-completed")
       {
         numbers.push(parseInt(res.meta_value));
@@ -185,8 +197,11 @@ router.get('/',async function(ctx){ // tog bort middleware auth lägg til senare
     var sum = numbers.reduce(function(total,num){
       return total + Math.round(num);
     });
+    var sumBetween = valueBetween.reduce(function(total,num){
+      return total + Math.round(num);
+    });
     var id = ctx.session.id;
-  await ctx.render('template',{"betweenSum": 0,"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
+  await ctx.render('template',{"betweenSum": sumBetween,"userid" : id,"total_sale": sum, "order_info": get_info, "måndag": mån, "tisdag": tis, "onsdag": ons, "torsdag" : tor, "fredag": fre, "lördag":lör, "söndag":sön});
 });
 
 //#########################################################################
@@ -203,40 +218,32 @@ router.get('/konto',auth,async function(ctx){
   await ctx.render('login_system/konto',{"userid" : id});
 });
 
-router.get('/konto/login',async function(ctx){
+router.get('/login',async function(ctx){
   var id = ctx.session.id;
 
   await ctx.render('login_system/login',{"userid" : id});  
 }); 
 
-router.post('/konto/login', async function(ctx){
+router.post('/login', async function(ctx){
  let loginCheck = await login_user(ctx.request.body);
   if(loginCheck)
   {
-//    if(loginCheck.coupon.coupon_name != undefined)
-  //  {
-    //  ctx.session.coupon = loginCheck.coupon.coupon_name;
-    //}
-    //else{
-      //console.log("user dont got a coupon");
-    //}
-
     ctx.session.username = ctx.request.body.username;
     ctx.session.id = loginCheck._id;
-    console.log("you are logged in from route");
+    ctx.redirect('/');
   }
   else{
     console.log("you failed from route");
   }
 });
 
-router.get('/konto/register', async function(ctx){
+router.get('/register', async function(ctx){
   var id = ctx.session.id;
 
     await ctx.render('login_system/register',{"userid" : id});
 });
 
-router.post('/konto/register', async function(ctx){
+router.post('/register', async function(ctx){
   if(create_user(ctx.request.body)){
     ctx.body = "användare skapad";
   }
@@ -245,18 +252,18 @@ router.post('/konto/register', async function(ctx){
   }
 });
 
-router.get('/konto/logout', async function(ctx){
+router.get('/logout', async function(ctx){
   ctx.session = null;
   ctx.body = "Du är utloggad";
 });
 
-router.get('/konto/rabattkod', async function(ctx){
+router.get('/rabattkod', async function(ctx){
   var id = ctx.session.id;
 
-  await ctx.render('includes/insert_coupon',{"userid" : id});
+  await ctx.render('login_system/insert_coupon',{"userid" : id});
 });
 
-router.post('/konto/rabattkod', async function(ctx){
+router.post('/rabattkod', async function(ctx){
   var username = ctx.session.username;
   if(add_coupon(username,app,ctx.request.body,con))
   {
@@ -267,27 +274,7 @@ router.post('/konto/rabattkod', async function(ctx){
     ctx.body = "coupon failed, test again";
   }
 });
-router.post('/getdate', async function(ctx){
-  var time = new Date();
-  time.getTime();
-  var start = ctx.request.body.dateStart;
-  var stop = ctx.request.body.dateStop;
-  var dateStart = new Date(start).toISOString().slice(0, 19).replace('T', ' ');
-  var dateStop = new Date(stop).toISOString().slice(0, 19).replace('T', ' ').replace('00:00:00', '23:59:59'); 
-  let test = await get_data_between(dateStart, dateStop,con);
 
-  numbers = [];
-
-  test.forEach(res=>{
-    numbers.push(res.meta_value);
-  });
-
-  var sum = numbers.reduce(function(total,num){
-    return total + Math.round(num);
-  });
-  var id = ctx.session.id;
-  await ctx.render('template',{"betweenSum" : sum, "userid" : id});  
-});
 
 
 app.listen(3000, console.log("3000"));

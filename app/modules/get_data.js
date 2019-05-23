@@ -1,13 +1,6 @@
 const mysql = require('mysql');
 
-    var con = mysql.createConnection({
-        host: "178.128.194.96",
-        user: "runeschool",
-        password: 'olaheterintepeter'
-    }); 
-    con.connect(function(err){if(err)throw err;});
-
-module.exports =  function(coupon){
+module.exports =  function(coupon,con){
     return new Promise( function(resolve, reject){
             
             var sql = `SELECT post_id,post_modified,meta_key, meta_value,post_status FROM wordpress.wp58_woocommerce_order_items

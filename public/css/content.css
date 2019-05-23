@@ -34,7 +34,7 @@
     font-weight: 600;
 }
 .chart-inside{
-    width: calc(100%/3);
+    width: calc(100%/2);
     padding:20px;
 }
 .chart-inside-inside{
